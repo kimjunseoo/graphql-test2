@@ -1,0 +1,40 @@
+# POST => https://swapi-graphql.eskerda.vercel.app/
+
+# Alias => 별칭
+# Fragments => 쿼리를 함수화 할 수 있도록 하는 법
+
+query getAllPlanets {
+  allPlanets {
+    planets {
+      id
+    }
+  }
+}
+
+query getPlanet(
+  $id: ID! = "cGxhbmV0czox"
+  $anotherId: ID! = "cGxhbmV0czo4"
+  $first: Int! = 2
+) {
+  myPlanet: planet(id: $id) {
+    ...planetFields
+  }
+  yourPlanet: planet(id: $anotherId) {
+    ...planetFields
+    created
+  }
+}
+
+# fragment planetFields on Planet 에서 Planet은 실제 Object Type, planetsFields 는 예명이다.
+
+fragment planetFields on Planet {
+  id
+  name
+  diameter
+  filmConnection(first: $first) {
+    films {
+      id
+      title
+    }
+  }
+}
