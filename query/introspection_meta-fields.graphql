@@ -1,0 +1,74 @@
+Introspection 
+
+- Graphql 서버의 스키마에 대한 정보를 쿼리할 수 있게 해주는 기능
+
+- 이 기능을 통해 클라이언트 도구에서 문서화와 자동완성을 제공
+
+- Meta Field
+
+Meta Field
+
+- Graphql의 스키마에 대한 정보를 제공
+
+- 별도의 작성 없이 자동으로 생성되는 필드
+
+- __schema, __type, __typename
+
+----------------------------------------------------
+# Meta Field
+
+# 1. __schema Meta Field
+
+{
+  __schema {
+    types {
+      kind
+      name
+    }
+  }
+}
+
+{
+  __schema {
+    queryType {
+      name
+    }
+    mutationType {
+      name
+    }
+    subscriptionType {
+      name
+    }
+    directives {
+      name
+    }
+  }
+}
+
+# 2. __type Meta Field
+
+{
+  __type(name: "Query") {
+    name
+    fields {
+      name
+      type{
+        name
+      }
+      args{
+        name
+      }
+    }
+  }
+}
+
+# 3. __typename Meta Field
+
+{
+  allPlanets{
+    planets{
+      __typename
+      id
+    }
+  }
+}
