@@ -1,0 +1,110 @@
+# Directives
+
+# isAnonymous 값에 따라 특정 쿼리를 skip or not skip
+
+query planet($id: ID! = "cGxhbmV0czox", $isAnonymous: Boolean!) {
+  privatePlanet: planet(id: $id) @skip(if: $isAnonymous) {
+    id
+    name
+    diameter
+    gravity
+  }
+
+  publicPlanet: planet(id: $id) {
+    id
+    name
+    diameter
+    gravity
+  }
+}
+
+VARIABLES
+{
+  "isAnonymous": true
+}
+----------------------------------------------------
+
+# isMine 값에 따라 특정 쿼리를 include or not include
+
+query planet($id: ID! = "cGxhbmV0czox", $isMine: Boolean!) {
+  privatePlanet: planet(id: $id){
+    id
+    name
+    diameter
+    gravity @include(if: $isMine)
+  }
+
+  publicPlanet: planet(id: $id) {
+    id
+    name
+    diameter
+    gravity
+  }
+}
+
+VARIABLES
+{
+  "isMine": false
+}
+----------------------------------------------------
+
+#Inline Fragments
+
+query planet($id: ID! = "cGxhbmV0czox", $isMine: Boolean!) {
+  privatePlanet: planet(id: $id){
+    id
+    ... on Planet {
+      name
+      diameter
+      gravity @include(if: $isMine)
+    }
+  }
+
+  publicPlanet: planet(id: $id) {
+    id
+    name
+    diameter
+    gravity
+  }
+}
+
+----------------------------------------------------
+
+# node 의 id에 따라 만약 id값이 Planet에 해당되면 Planet 정보를 return 시키고 Person에 해당되면 Person 정보를 return 시킴
+
+query node {
+  node(id:"cGVvcGxlOjY=") {
+    
+    ... on Planet{
+      id
+      name
+      gravity
+    }
+    ... on Person{
+      id
+      name
+      birthYear
+    }
+  }
+}
+
+----------------------------------------------------
+
+# __typename
+# __typename을 통해 어떤 Object의 정보가 조회된건지 명시할 수 있음
+
+query node {
+  node(id:"cGVvcGxlOjY=") {
+    __typename
+    ... on Planet{
+      id
+      name
+      gravity
+    }
+    ... on Person{
+      id
+      name
+      birthYear
+    }
+  }
+}
