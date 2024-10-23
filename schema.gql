@@ -1,0 +1,103 @@
+type CartItem {
+  id: ID!
+  product: Product!
+  quantity: Int!
+}
+
+type Cart {
+  id: ID!
+  user: User!
+  items: [CartItem]!
+  totalAmount: Float!
+}
+
+input AddCartItem {
+  userId: ID!
+  productID: ID!
+  quantity: Int!
+}
+
+input DeleteCartItemInput {
+  cartItemId: ID!
+  userId: ID!
+}
+
+type Mutation {
+  addUser(addUserInput: AddUserInput): User!
+
+  addProduct(addProductInput: AddProductInput): Product!
+
+  addCartItem(addCartItem: AddCartItem): Cart!
+
+  deleteCartItem(deleteCartItemInput: DeleteCartItemInput): Cart!
+}
+
+interface Product {
+  id: ID!
+  name: String!
+  price: Float!
+  productType: ProductType
+}
+
+type Electronics implements Product {
+  id: ID!
+  name: String!
+  price: Float!
+  productType: ProductType
+  warrantyPeriod: String!
+}
+
+type Clothing implements Product {
+  id: ID!
+  name: String!
+  price: Float!
+  productType: ProductType
+  size: String!
+}
+
+enum ProductType {
+  ELECTRONICS
+  CLOTHING
+}
+
+input AddProductInput {
+  name: String!
+  price: Float!
+  productType: ProductType!
+  warrantyPeriod: String!
+  size: String!
+}
+
+type Query {
+  """
+  사용자 정보를 ID로 조회
+  """
+  getUser(userId: ID!): User!
+
+  getProducts: [Product!]!
+
+  getUserCart(userId: ID!): Cart!
+
+  search(keyword: String!): [SearchResult!]!
+}
+
+union SearchResult = User | Electronics | Clothing
+
+type Subscription {
+  newProduct(productName: String): Product!
+}
+
+scalar DateTime
+
+type User {
+  id: ID!
+  name: String!
+  email: String!
+  cart: Cart!
+  createdAt: DateTime!
+}
+
+input AddUserInput {
+  name: String!
+  email: String!
+}
